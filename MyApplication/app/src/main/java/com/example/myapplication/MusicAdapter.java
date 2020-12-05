@@ -1,6 +1,7 @@
 package com.example.myapplication;
 
 import android.content.Context;
+import android.content.Intent;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.view.LayoutInflater;
@@ -47,6 +48,15 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MyViewHolder
                     .load(R.drawable.images)
                     .into(holder.image);
         }
+
+        holder.itemView.setOnClickListener(v->{
+            Intent intent = new Intent(context, PlayerActivity.class);
+
+            //Put position information of musicfiles
+            intent.putExtra("position", position);
+
+            context.startActivity(intent);
+        });
     }
 
     @Override
