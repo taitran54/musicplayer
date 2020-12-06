@@ -13,6 +13,7 @@ import androidx.viewpager.widget.ViewPager;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
@@ -33,9 +34,10 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
     public static final int REQUEST_CODE = 1;
     public static ArrayList<MusicFiles> musicFiles;
-    static boolean shuffle = false, repeat = false;
+    static boolean shuffle, repeat;
     static ArrayList<MusicFiles> albums = new ArrayList<>();
 
+    private SharedPreferences pref; //Store shuffle and repeat
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,6 +78,11 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         viewPagerAdapter.addPragments(new SongsFragment(), "Songs");
         viewPager.setAdapter(viewPagerAdapter);
         tabLayout.setupWithViewPager(viewPager);
+        pref = getPreferences(MODE_PRIVATE);
+
+        shuffle = pref.getBoolean("shuf", false);
+        repeat =  pref.getBoolean("repe", false);
+        Log.e("TEST", String.valueOf(shuffle));
     }
 
     public static class ViewPagerAdapter extends FragmentPagerAdapter{
@@ -183,4 +190,15 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         SongsFragment.musicAdapter.updatePlayList(myMusics);
         return true;
     } //onQueryTextChange
+
+    @Override
+    protected void onDestroy() {
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putBoolean("shuf", shuffle);
+        editor.putBoolean("repe", repeat);
+        Log.e("TEST", String.valueOf(shuffle));
+        editor.commit();
+        editor.apply();
+        super.onDestroy();
+    }
 }

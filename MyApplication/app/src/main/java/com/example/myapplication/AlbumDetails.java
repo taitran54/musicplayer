@@ -19,7 +19,7 @@ public class AlbumDetails extends AppCompatActivity {
     RecyclerView recyclerView;
     ImageView albumPhoto;
     String albumName;
-    static ArrayList<MusicFiles> albumSongs = new ArrayList<>();
+    static ArrayList<MusicFiles> albumSongs;
     AlbumDetailsAdapter albumDetailsAdapter;
 
     @Override
@@ -32,6 +32,7 @@ public class AlbumDetails extends AppCompatActivity {
 
     private void initView() {
         recyclerView = findViewById(R.id.recyler_album);
+        albumSongs = new ArrayList<>();
         albumPhoto = findViewById(R.id.albumPhoto);
         albumName = getIntent().getStringExtra("albumName");
         int j = 0;
