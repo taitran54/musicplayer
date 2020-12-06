@@ -19,11 +19,14 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.ArrayList;
 import java.util.Random;
 
+import static com.example.myapplication.AlbumDetails.albumSongs;
 import static com.example.myapplication.MainActivity.musicFiles;
 import static com.example.myapplication.MainActivity.repeat;
 import static com.example.myapplication.MainActivity.shuffle;
+import static com.example.myapplication.MusicAdapter.musicFile;
 
-public class PlayerActivity extends AppCompatActivity {
+public class PlayerActivity extends AppCompatActivity
+        implements MediaPlayer.OnCompletionListener {
 
     TextView songName, artistName, playTime, endTime;
     ImageView coverArt, btnNext, btnPrevious, btnBack,btnShuffle, btnRepeat, btnMenu;
@@ -47,7 +50,6 @@ public class PlayerActivity extends AppCompatActivity {
         initViews(); //Setup ID for UI
         
         setupMusicPosition();
-
 
         durationBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -114,7 +116,16 @@ public class PlayerActivity extends AppCompatActivity {
     } //formatTime
 
     private void setupMusicPosition() {
-        dataSongs = musicFiles; //get data form Main Activity (static variable)
+        positionMusic = getIntent().getIntExtra("position", -1);
+        //Log.d("TAG", dataSongs.get(positionMusic).getTitle());
+
+        String sender = getIntent().getStringExtra("sender");
+        if (sender != null && sender.equals("albumDetails")){
+            dataSongs = albumSongs;
+        }
+        else {
+            dataSongs = musicFile;
+        } //get data form Main Activity (static variable)
 
         positionMusic = getIntent().getIntExtra("position", -1);
         //Log.d("TAG", dataSongs.get(positionMusic).getTitle());
@@ -399,4 +410,14 @@ public class PlayerActivity extends AppCompatActivity {
     }
 
 
+
+    @Override
+    public void onCompletion(MediaPlayer mp) {
+       this.btnNextClicked();
+       if (mediaPlayer != null){
+           mediaPlayer = MediaPlayer.create(getApplicationContext(), uri);
+           mediaPlayer.start();
+           mediaPlayer.setOnCompletionListener(this);
+       }
+    }
 }
